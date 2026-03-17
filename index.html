@@ -1,0 +1,522 @@
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap');
+
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --serif:'Instrument Serif',serif;
+  --sans:'DM Sans',sans-serif;
+  --mono:'DM Mono',monospace;
+  --accent:#7C6AF5;
+  --accent-light:#EEE9FF;
+  --green:#2BBF7B;
+  --green-bg:#E5F9EF;
+}
+
+body{font-family:var(--sans);background:#0A0A09;color:#F0EFE8;overflow-x:hidden;}
+
+/* ── NOISE TEXTURE ── */
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  opacity:.4;
+}
+
+/* ── GRID ── */
+.page{position:relative;z-index:1;}
+
+/* ── NAV ── */
+nav{
+  display:flex;align-items:center;padding:20px 40px;
+  border-bottom:0.5px solid rgba(255,255,255,0.06);
+  position:sticky;top:0;z-index:100;
+  background:rgba(10,10,9,0.85);backdrop-filter:blur(12px);
+}
+.nav-logo{display:flex;align-items:center;gap:9px;font-size:15px;font-weight:600;letter-spacing:-.3px;}
+.nav-mark{width:24px;height:24px;border-radius:7px;background:linear-gradient(135deg,#7C6AF5,#5B97F8);display:flex;align-items:center;justify-content:center;}
+.nav-mark svg{width:13px;height:13px;}
+.nav-links{display:flex;align-items:center;gap:28px;margin-left:40px;}
+.nav-link{font-size:13px;color:rgba(240,239,232,0.5);cursor:pointer;transition:color .15s;}
+.nav-link:hover{color:#F0EFE8;}
+.nav-right{margin-left:auto;display:flex;align-items:center;gap:10px;}
+.btn-nav{font-family:var(--sans);font-size:12px;font-weight:500;border-radius:7px;cursor:pointer;padding:7px 14px;transition:all .15s;}
+.btn-nav-ghost{background:transparent;color:rgba(240,239,232,0.6);border:0.5px solid rgba(255,255,255,0.1);}
+.btn-nav-ghost:hover{background:rgba(255,255,255,0.05);color:#F0EFE8;}
+.btn-nav-filled{background:#7C6AF5;color:#fff;border:none;}
+.btn-nav-filled:hover{background:#6557E0;}
+
+/* ── HERO ── */
+.hero{
+  padding:100px 40px 80px;
+  text-align:center;
+  position:relative;
+  overflow:hidden;
+}
+.hero-glow{
+  position:absolute;top:-80px;left:50%;transform:translateX(-50%);
+  width:600px;height:600px;border-radius:50%;
+  background:radial-gradient(ellipse,rgba(124,106,245,0.18) 0%,transparent 70%);
+  pointer-events:none;
+}
+.hero-pill{
+  display:inline-flex;align-items:center;gap:7px;
+  background:rgba(124,106,245,0.12);border:0.5px solid rgba(124,106,245,0.3);
+  border-radius:999px;padding:5px 14px;font-size:11.5px;color:#A898FF;
+  margin-bottom:28px;font-weight:500;
+}
+.hero-pill span{width:6px;height:6px;border-radius:50%;background:#7C6AF5;animation:pulse-dot 2s infinite;}
+@keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.6;transform:scale(.8)}}
+
+.hero-h1{
+  font-family:var(--serif);font-size:clamp(44px,6vw,72px);
+  line-height:1.08;letter-spacing:-.5px;
+  margin-bottom:22px;
+  color:#F0EFE8;
+}
+.hero-h1 em{font-style:italic;color:#A898FF;}
+.hero-sub{
+  font-size:16px;line-height:1.7;color:rgba(240,239,232,0.55);
+  max-width:480px;margin:0 auto 38px;
+}
+.hero-actions{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;}
+.btn-hero{
+  font-family:var(--sans);font-weight:500;border-radius:9px;cursor:pointer;
+  padding:11px 22px;font-size:14px;transition:all .15s;display:flex;align-items:center;gap:7px;
+  border:none;
+}
+.btn-hero-primary{background:#7C6AF5;color:#fff;}
+.btn-hero-primary:hover{background:#6557E0;transform:translateY(-1px);}
+.btn-hero-secondary{background:rgba(255,255,255,0.07);color:#F0EFE8;border:0.5px solid rgba(255,255,255,0.12);}
+.btn-hero-secondary:hover{background:rgba(255,255,255,0.1);}
+.hero-trust{margin-top:28px;font-size:11.5px;color:rgba(240,239,232,0.3);}
+
+/* ── PREVIEW WINDOW ── */
+.preview-wrap{
+  padding:0 40px 80px;
+  position:relative;
+}
+.preview-frame{
+  border-radius:14px;overflow:hidden;
+  border:0.5px solid rgba(255,255,255,0.08);
+  background:#111110;
+  max-width:900px;margin:0 auto;
+}
+.preview-bar{
+  display:flex;align-items:center;gap:7px;
+  padding:12px 16px;border-bottom:0.5px solid rgba(255,255,255,0.06);
+  background:rgba(255,255,255,0.03);
+}
+.win-dot{width:10px;height:10px;border-radius:50%;}
+.preview-content{padding:24px;display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;}
+.mini-card{background:#1A1A18;border:0.5px solid rgba(255,255,255,0.07);border-radius:10px;padding:14px;}
+.mini-label{font-size:10px;color:rgba(240,239,232,0.35);margin-bottom:6px;text-transform:uppercase;letter-spacing:.06em;font-weight:500;}
+.mini-val{font-family:var(--mono);font-size:20px;font-weight:600;letter-spacing:-.4px;}
+.mini-delta{font-size:10px;margin-top:5px;display:flex;align-items:center;gap:3px;}
+.d-up{color:#2BBF7B;} .d-dn{color:#F06058;}
+.preview-bottom{display:grid;grid-template-columns:3fr 2fr;gap:12px;padding:0 24px 24px;}
+.mini-table{background:#1A1A18;border:0.5px solid rgba(255,255,255,0.07);border-radius:10px;overflow:hidden;}
+.mt-head{display:grid;grid-template-columns:1fr 80px 80px;padding:8px 14px;border-bottom:0.5px solid rgba(255,255,255,0.06);}
+.mt-h{font-size:9.5px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:rgba(240,239,232,0.3);}
+.mt-row{display:grid;grid-template-columns:1fr 80px 80px;padding:9px 14px;border-top:0.5px solid rgba(255,255,255,0.04);align-items:center;}
+.mt-av{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:600;flex-shrink:0;}
+.mt-name{font-size:11.5px;font-weight:500;}
+.mt-sub{font-size:10px;color:rgba(240,239,232,0.35);font-family:var(--mono);}
+.mini-pill{font-size:9px;font-family:var(--mono);padding:2px 8px;border-radius:999px;font-weight:500;}
+.mini-feed{background:#1A1A18;border:0.5px solid rgba(255,255,255,0.07);border-radius:10px;padding:14px;}
+.feed-row{display:flex;gap:9px;padding:7px 0;border-top:0.5px solid rgba(255,255,255,0.05);align-items:center;}
+.feed-row:first-child{border-top:none;padding-top:0;}
+.feed-dot{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:600;flex-shrink:0;}
+.feed-txt{font-size:10.5px;color:rgba(240,239,232,0.55);line-height:1.4;}
+.feed-name{font-weight:500;color:#F0EFE8;}
+.feed-time{font-size:9px;color:rgba(240,239,232,0.25);font-family:var(--mono);}
+
+/* ── STATS ROW ── */
+.stats-strip{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  max-width:640px;margin:0 auto 80px;gap:0;
+  border:0.5px solid rgba(255,255,255,0.08);
+  border-radius:12px;overflow:hidden;
+}
+.stat-cell{padding:28px 24px;text-align:center;border-right:0.5px solid rgba(255,255,255,0.07);}
+.stat-cell:last-child{border-right:none;}
+.stat-n{font-family:var(--serif);font-size:40px;color:#A898FF;line-height:1;}
+.stat-l{font-size:12px;color:rgba(240,239,232,0.4);margin-top:6px;}
+
+/* ── FEATURES ── */
+.features{padding:0 40px 80px;}
+.section-label{text-align:center;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#7C6AF5;margin-bottom:12px;}
+.section-title{text-align:center;font-family:var(--serif);font-size:clamp(28px,4vw,42px);line-height:1.15;margin-bottom:12px;}
+.section-title em{font-style:italic;color:#A898FF;}
+.section-sub{text-align:center;font-size:14px;color:rgba(240,239,232,0.45);max-width:420px;margin:0 auto 52px;line-height:1.7;}
+
+.feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(255,255,255,0.07);border-radius:14px;overflow:hidden;max-width:900px;margin:0 auto;}
+.feat-cell{background:#0A0A09;padding:28px 26px;}
+.feat-icon{width:36px;height:36px;border-radius:9px;background:rgba(124,106,245,0.12);border:0.5px solid rgba(124,106,245,0.2);display:flex;align-items:center;justify-content:center;margin-bottom:16px;}
+.feat-icon svg{width:16px;height:16px;}
+.feat-h{font-size:14px;font-weight:600;margin-bottom:8px;letter-spacing:-.2px;}
+.feat-p{font-size:12.5px;color:rgba(240,239,232,0.45);line-height:1.65;}
+
+/* ── COMPONENT GRID ── */
+.comp-showcase{padding:0 40px 80px;}
+.comp-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;max-width:900px;margin:0 auto;}
+.comp-tile{
+  background:#111110;border:0.5px solid rgba(255,255,255,0.07);
+  border-radius:12px;padding:20px;
+  display:flex;flex-direction:column;gap:12px;
+  transition:border-color .2s;
+  cursor:pointer;
+}
+.comp-tile:hover{border-color:rgba(124,106,245,0.35);}
+.comp-tile-label{font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:rgba(240,239,232,0.3);}
+.comp-tile-preview{flex:1;display:flex;flex-wrap:wrap;gap:6px;align-items:center;}
+
+/* Mini component previews */
+.m-btn{display:inline-flex;align-items:center;justify-content:center;font-family:var(--sans);font-weight:500;border-radius:6px;cursor:pointer;font-size:11px;padding:5px 11px;}
+.m-btn-p{background:#7C6AF5;color:#fff;border:none;}
+.m-btn-s{background:#1E1E1C;color:#A8A79E;border:0.5px solid rgba(255,255,255,0.1);}
+.m-btn-g{background:transparent;color:#6A6960;border:0.5px solid transparent;}
+.m-badge{display:inline-flex;align-items:center;gap:4px;font-size:9.5px;font-family:var(--mono);border-radius:3px;padding:2px 7px;}
+.m-av{border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:600;}
+.m-input{width:100%;height:28px;padding:0 9px;font-family:var(--sans);font-size:11px;background:#1A1A18;border:0.5px solid rgba(255,255,255,0.1);border-radius:6px;color:#F0EFE8;}
+.m-toggle{display:flex;align-items:center;gap:6px;font-size:11px;color:#A8A79E;}
+.m-track{width:28px;height:16px;border-radius:999px;background:#7C6AF5;position:relative;flex-shrink:0;}
+.m-knob{position:absolute;top:2px;right:2px;width:12px;height:12px;border-radius:50%;background:#fff;}
+.m-prog-wrap{width:100%;}
+.m-prog-bar{width:100%;height:4px;background:#1E1E1C;border-radius:999px;overflow:hidden;}
+.m-prog-fill{height:100%;border-radius:999px;}
+.m-alert{width:100%;padding:9px 10px;border-radius:7px;font-size:10.5px;display:flex;gap:7px;align-items:flex-start;}
+
+/* ── PRICING ── */
+.pricing{padding:0 40px 80px;}
+.price-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;max-width:760px;margin:0 auto;}
+.price-card{background:#111110;border:0.5px solid rgba(255,255,255,0.08);border-radius:14px;padding:24px;display:flex;flex-direction:column;}
+.price-card.hot{border-color:#7C6AF5;background:rgba(124,106,245,0.05);}
+.price-plan{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:rgba(240,239,232,0.4);margin-bottom:10px;}
+.price-card.hot .price-plan{color:#A898FF;}
+.price-amt{font-family:var(--serif);font-size:38px;line-height:1;color:#F0EFE8;margin-bottom:4px;}
+.price-per{font-size:12px;color:rgba(240,239,232,0.3);margin-bottom:20px;}
+.price-divider{height:0.5px;background:rgba(255,255,255,0.07);margin-bottom:18px;}
+.price-feat{display:flex;align-items:center;gap:8px;font-size:12.5px;color:rgba(240,239,232,0.55);margin-bottom:10px;}
+.price-feat svg{width:12px;height:12px;color:#2BBF7B;flex-shrink:0;}
+.price-feat.no{color:rgba(240,239,232,0.2);}
+.price-feat.no svg{color:rgba(240,239,232,0.2);}
+.price-cta{margin-top:auto;padding-top:20px;}
+.btn-price{width:100%;font-family:var(--sans);font-weight:500;font-size:13px;border-radius:8px;cursor:pointer;padding:9px;transition:all .15s;border:none;}
+.btn-price-ghost{background:rgba(255,255,255,0.05);color:#F0EFE8;border:0.5px solid rgba(255,255,255,0.1);}
+.btn-price-ghost:hover{background:rgba(255,255,255,0.08);}
+.btn-price-solid{background:#7C6AF5;color:#fff;}
+.btn-price-solid:hover{background:#6557E0;}
+
+/* ── FOOTER ── */
+footer{
+  border-top:0.5px solid rgba(255,255,255,0.07);
+  padding:32px 40px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.footer-copy{font-size:12px;color:rgba(240,239,232,0.25);}
+.footer-links{display:flex;gap:20px;}
+.footer-link{font-size:12px;color:rgba(240,239,232,0.3);cursor:pointer;transition:color .15s;}
+.footer-link:hover{color:rgba(240,239,232,0.6);}
+
+/* ── ANIMATIONS ── */
+@keyframes fade-up{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.fade-in{animation:fade-up .5s ease both;}
+.d1{animation-delay:.05s}.d2{animation-delay:.12s}.d3{animation-delay:.2s}.d4{animation-delay:.28s}
+</style>
+
+<div class="page">
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-logo">
+      <div class="nav-mark"><svg viewBox="0 0 12 12" fill="none"><rect x="1" y="1" width="4" height="4" rx="1" fill="white"/><rect x="7" y="1" width="4" height="4" rx="1" fill="white" opacity=".6"/><rect x="1" y="7" width="4" height="4" rx="1" fill="white" opacity=".6"/><rect x="7" y="7" width="4" height="4" rx="1" fill="white" opacity=".3"/></svg></div>
+      Pulse UI
+    </div>
+    <div class="nav-links">
+      <span class="nav-link" onclick="document.querySelector('.comp-showcase').scrollIntoView({behavior:'smooth'})">Components</span>
+      <span class="nav-link" onclick="document.querySelector('.pricing').scrollIntoView({behavior:'smooth'})">Pricing</span>
+      <span class="nav-link">Docs</span>
+      <span class="nav-link">Changelog</span>
+    </div>
+    <div class="nav-right">
+      <button class="btn-nav btn-nav-ghost">Sign in</button>
+      <button class="btn-nav btn-nav-filled">Get the kit →</button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-glow"></div>
+    <div class="hero-pill fade-in"><span></span>Now with React components</div>
+    <h1 class="hero-h1 fade-in d1">Build SaaS products<br>that look <em>exceptional</em></h1>
+    <p class="hero-sub fade-in d2">A complete UI component library — design tokens, CSS, and React — built for teams who ship fast and care about craft.</p>
+    <div class="hero-actions fade-in d3">
+      <button class="btn-hero btn-hero-primary">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 2v8M4 7l4 4 4-4M2 12h12" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Download free kit
+      </button>
+      <button class="btn-hero btn-hero-secondary">View all components →</button>
+    </div>
+    <p class="hero-trust fade-in d4">Free forever · No attribution required · MIT license</p>
+  </section>
+
+  <!-- PREVIEW WINDOW -->
+  <div class="preview-wrap fade-in d4">
+    <div class="preview-frame">
+      <div class="preview-bar">
+        <div class="win-dot" style="background:#FF5F57"></div>
+        <div class="win-dot" style="background:#FFBD2E"></div>
+        <div class="win-dot" style="background:#28C840"></div>
+        <div style="flex:1;text-align:center;font-size:11px;color:rgba(240,239,232,0.2);font-family:var(--mono)">pulse-ui / dashboard</div>
+      </div>
+      <div class="preview-content">
+        <div class="mini-card"><div class="mini-label">MRR</div><div class="mini-val">$48.2k</div><div class="mini-delta d-up">↑ +12.4%</div></div>
+        <div class="mini-card"><div class="mini-label">Active users</div><div class="mini-val">3,291</div><div class="mini-delta d-up">↑ +8.1%</div></div>
+        <div class="mini-card"><div class="mini-label">Churn rate</div><div class="mini-val">2.3%</div><div class="mini-delta d-dn">↓ −0.4%</div></div>
+        <div class="mini-card"><div class="mini-label">NPS score</div><div class="mini-val">68</div><div class="mini-delta d-up">↑ +5 pts</div></div>
+      </div>
+      <div class="preview-bottom">
+        <div class="mini-table">
+          <div class="mt-head"><span class="mt-h">User</span><span class="mt-h">Plan</span><span class="mt-h">Status</span></div>
+          <div class="mt-row">
+            <div style="display:flex;align-items:center;gap:7px"><div class="mt-av" style="background:#EEE9FF;color:#6454D6">AO</div><div><div class="mt-name">Amara Osei</div></div></div>
+            <span style="font-size:10px;color:rgba(240,239,232,0.3);font-family:var(--mono)">Pro</span>
+            <span class="mini-pill" style="background:#E5F9EF;color:#0D5C38">Active</span>
+          </div>
+          <div class="mt-row">
+            <div style="display:flex;align-items:center;gap:7px"><div class="mt-av" style="background:#E5F9EF;color:#1A9B5E">LN</div><div><div class="mt-name">Lena Novak</div></div></div>
+            <span style="font-size:10px;color:rgba(240,239,232,0.3);font-family:var(--mono)">Team</span>
+            <span class="mini-pill" style="background:#E5F9EF;color:#0D5C38">Active</span>
+          </div>
+          <div class="mt-row">
+            <div style="display:flex;align-items:center;gap:7px"><div class="mt-av" style="background:#FFF3E0;color:#D08800">RJ</div><div><div class="mt-name">Raj Joshi</div></div></div>
+            <span style="font-size:10px;color:rgba(240,239,232,0.3);font-family:var(--mono)">Starter</span>
+            <span class="mini-pill" style="background:#EEE9FF;color:#6454D6">Trial</span>
+          </div>
+        </div>
+        <div class="mini-feed">
+          <div style="font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:rgba(240,239,232,0.25);margin-bottom:8px">Activity</div>
+          <div class="feed-row"><div class="feed-dot" style="background:#EEE9FF;color:#7C6AF5">AO</div><div><div class="feed-txt"><span class="feed-name">Amara</span> upgraded to Pro</div><div class="feed-time">2m ago</div></div></div>
+          <div class="feed-row"><div class="feed-dot" style="background:#E5F9EF;color:#2BBF7B">LN</div><div><div class="feed-txt"><span class="feed-name">Lena</span> invited 3 members</div><div class="feed-time">17m ago</div></div></div>
+          <div class="feed-row"><div class="feed-dot" style="background:#FFF3E0;color:#D08800">RJ</div><div><div class="feed-txt"><span class="feed-name">Raj</span> hit 10k API calls</div><div class="feed-time">1h ago</div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-strip">
+    <div class="stat-cell"><div class="stat-n">80+</div><div class="stat-l">Components</div></div>
+    <div class="stat-cell"><div class="stat-n">12</div><div class="stat-l">Section groups</div></div>
+    <div class="stat-cell"><div class="stat-n">∞</div><div class="stat-l">Projects you can build</div></div>
+  </div>
+
+  <!-- FEATURES -->
+  <section class="features">
+    <div class="section-label">Why Pulse UI</div>
+    <h2 class="section-title">Everything you need,<br><em>nothing you don't</em></h2>
+    <p class="section-sub">Designed for developers and designers who ship fast. Every component is production-ready and dark-mode native.</p>
+    <div class="feat-grid">
+      <div class="feat-cell">
+        <div class="feat-icon"><svg viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="5" height="5" rx="1.5" stroke="#A898FF" stroke-width="1.2"/><rect x="9" y="2" width="5" height="5" rx="1.5" stroke="#A898FF" stroke-width="1.2"/><rect x="2" y="9" width="5" height="5" rx="1.5" stroke="#A898FF" stroke-width="1.2"/><rect x="9" y="9" width="5" height="5" rx="1.5" stroke="#A898FF" stroke-width="1.2"/></svg></div>
+        <div class="feat-h">Design tokens</div>
+        <div class="feat-p">Every color, radius, spacing, and type scale lives as a CSS variable. Swap your brand in seconds.</div>
+      </div>
+      <div class="feat-cell">
+        <div class="feat-icon"><svg viewBox="0 0 16 16" fill="none"><path d="M4 8h8M8 4l4 4-4 4" stroke="#A898FF" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="feat-h">React-ready</div>
+        <div class="feat-p">Drop-in React components with sensible props. Works with Tailwind, Vite, Next.js, or vanilla.</div>
+      </div>
+      <div class="feat-cell">
+        <div class="feat-icon"><svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="2.5" stroke="#A898FF" stroke-width="1.2"/><path d="M8 1v1.5M8 13.5V15M15 8h-1.5M2.5 8H1M12.95 3.05l-1.06 1.06M4.11 11.89l-1.06 1.06" stroke="#A898FF" stroke-width="1.2" stroke-linecap="round"/></svg></div>
+        <div class="feat-h">Dark mode native</div>
+        <div class="feat-p">Every token ships with a dark variant. Automatic via prefers-color-scheme. Zero extra work.</div>
+      </div>
+      <div class="feat-cell">
+        <div class="feat-icon"><svg viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="#A898FF" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="feat-h">Accessible</div>
+        <div class="feat-p">WCAG 2.1 AA contrast ratios throughout. Focus rings, aria attributes, and keyboard nav built in.</div>
+      </div>
+      <div class="feat-cell">
+        <div class="feat-icon"><svg viewBox="0 0 16 16" fill="none"><path d="M2 4h12M5 8h6M7 12h2" stroke="#A898FF" stroke-width="1.3" stroke-linecap="round"/></svg></div>
+        <div class="feat-h">Semantic HTML</div>
+        <div class="feat-p">Clean, minimal markup. Use the CSS classes standalone, or import the React wrapper components.</div>
+      </div>
+      <div class="feat-cell">
+        <div class="feat-icon"><svg viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="12" height="12" rx="2.5" stroke="#A898FF" stroke-width="1.2"/><path d="M5 8h6M8 5v6" stroke="#A898FF" stroke-width="1.3" stroke-linecap="round"/></svg></div>
+        <div class="feat-h">MIT license</div>
+        <div class="feat-p">Use it on client projects, sell products built with it. No attribution required. Truly free.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMPONENT SHOWCASE -->
+  <section class="comp-showcase">
+    <div class="section-label">Components</div>
+    <h2 class="section-title">Everything in <em>one kit</em></h2>
+    <p class="section-sub">80+ components across 12 categories. Buttons, forms, cards, overlays, data display, and more.</p>
+    <div class="comp-grid">
+
+      <!-- Buttons -->
+      <div class="comp-tile">
+        <div class="comp-tile-label">Buttons</div>
+        <div class="comp-tile-preview">
+          <button class="m-btn m-btn-p">Primary</button>
+          <button class="m-btn m-btn-s">Secondary</button>
+          <button class="m-btn m-btn-g">Ghost</button>
+        </div>
+      </div>
+
+      <!-- Badges -->
+      <div class="comp-tile">
+        <div class="comp-tile-label">Badges</div>
+        <div class="comp-tile-preview">
+          <span class="m-badge" style="background:#EEE9FF;color:#6454D6"><span style="width:5px;height:5px;border-radius:50%;background:#7C6AF5"></span>Active</span>
+          <span class="m-badge" style="background:#E5F9EF;color:#0D5C38">Success</span>
+          <span class="m-badge" style="background:#FFF3E0;color:#6B3D00">Pending</span>
+          <span class="m-badge" style="background:#FEF0EE;color:#7A1F1F">Error</span>
+        </div>
+      </div>
+
+      <!-- Avatars -->
+      <div class="comp-tile">
+        <div class="comp-tile-label">Avatars</div>
+        <div class="comp-tile-preview" style="align-items:center">
+          <div class="m-av" style="width:34px;height:34px;font-size:12px;background:#EEE9FF;color:#6454D6">AO</div>
+          <div class="m-av" style="width:28px;height:28px;font-size:10px;background:#E5F9EF;color:#1A9B5E">LN</div>
+          <div class="m-av" style="width:22px;height:22px;font-size:8px;background:#FFF3E0;color:#D08800">RJ</div>
+          <div style="display:flex;margin-left:4px">
+            <div class="m-av" style="width:24px;height:24px;font-size:8px;background:#EEE9FF;color:#6454D6;border:2px solid #0A0A09;margin-left:-6px">A</div>
+            <div class="m-av" style="width:24px;height:24px;font-size:8px;background:#E5F9EF;color:#1A9B5E;border:2px solid #0A0A09;margin-left:-6px">L</div>
+            <div class="m-av" style="width:24px;height:24px;font-size:8px;background:#1A1A18;color:#6A6960;border:2px solid #0A0A09;margin-left:-6px">+3</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Inputs -->
+      <div class="comp-tile">
+        <div class="comp-tile-label">Inputs</div>
+        <div class="comp-tile-preview col" style="flex-direction:column;align-items:stretch;gap:7px">
+          <input class="m-input" placeholder="Email address" type="email">
+          <input class="m-input" placeholder="Password" type="password" style="border-color:rgba(240,96,88,0.4)">
+        </div>
+      </div>
+
+      <!-- Toggle -->
+      <div class="comp-tile">
+        <div class="comp-tile-label">Controls</div>
+        <div class="comp-tile-preview" style="flex-direction:column;align-items:flex-start;gap:9px">
+          <div class="m-toggle"><div class="m-track"><div class="m-knob"></div></div>Email alerts</div>
+          <div class="m-toggle"><div class="m-track" style="background:#2A2A28"><div class="m-knob" style="right:auto;left:2px"></div></div><span style="color:rgba(240,239,232,0.3)">Dark mode</span></div>
+        </div>
+      </div>
+
+      <!-- Progress -->
+      <div class="comp-tile">
+        <div class="comp-tile-label">Progress</div>
+        <div class="comp-tile-preview" style="flex-direction:column;align-items:stretch;gap:8px">
+          <div class="m-prog-wrap">
+            <div style="display:flex;justify-content:space-between;font-size:10px;color:rgba(240,239,232,0.4);margin-bottom:5px"><span>Storage</span><span>72%</span></div>
+            <div class="m-prog-bar"><div class="m-prog-fill" style="width:72%;background:#7C6AF5"></div></div>
+          </div>
+          <div class="m-prog-wrap">
+            <div style="display:flex;justify-content:space-between;font-size:10px;color:rgba(240,239,232,0.4);margin-bottom:5px"><span>Onboarding</span><span>4/6</span></div>
+            <div class="m-prog-bar" style="height:6px"><div class="m-prog-fill" style="width:66%;background:#2BBF7B"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Alert -->
+      <div class="comp-tile">
+        <div class="comp-tile-label">Alerts</div>
+        <div class="comp-tile-preview" style="flex-direction:column;align-items:stretch;gap:6px">
+          <div class="m-alert" style="background:#1A2C1A;border:0.5px solid rgba(43,191,123,0.2);color:#6FCFA0;font-size:10.5px">
+            <svg width="12" height="12" viewBox="0 0 16 16" fill="none" style="flex-shrink:0;margin-top:1px"><circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.2"/><path d="M5 8l2.5 2.5L11 6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+            Changes saved successfully
+          </div>
+          <div class="m-alert" style="background:#2A1A1A;border:0.5px solid rgba(240,96,88,0.2);color:#F09090;font-size:10.5px">
+            <svg width="12" height="12" viewBox="0 0 16 16" fill="none" style="flex-shrink:0;margin-top:1px"><circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.2"/><path d="M5.5 5.5l5 5M10.5 5.5l-5 5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+            Payment failed. Retry?
+          </div>
+        </div>
+      </div>
+
+      <!-- Cards -->
+      <div class="comp-tile">
+        <div class="comp-tile-label">Cards</div>
+        <div class="comp-tile-preview" style="flex-direction:column;align-items:stretch;gap:6px">
+          <div style="background:#1A1A18;border:0.5px solid rgba(255,255,255,0.07);border-radius:8px;padding:10px">
+            <div style="font-size:11.5px;font-weight:500;margin-bottom:3px">Default card</div>
+            <div style="font-size:10px;color:rgba(240,239,232,0.35);line-height:1.4">Content surface for grouped information</div>
+          </div>
+          <div style="background:#1A1A18;border:1px solid #7C6AF5;border-radius:8px;padding:10px">
+            <div style="font-size:9px;background:rgba(124,106,245,0.15);color:#A898FF;border-radius:3px;display:inline-block;padding:1px 6px;margin-bottom:5px;font-family:var(--mono)">Featured</div>
+            <div style="font-size:11.5px;font-weight:500">Pro plan</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section class="pricing">
+    <div class="section-label">Pricing</div>
+    <h2 class="section-title">Simple, <em>honest</em> pricing</h2>
+    <p class="section-sub">Start free. Upgrade when you're ready to unlock the full system and Figma file.</p>
+    <div class="price-grid">
+      <div class="price-card">
+        <div class="price-plan">Free</div>
+        <div class="price-amt">$0</div>
+        <div class="price-per">forever</div>
+        <div class="price-divider"></div>
+        <div class="price-feat"><svg viewBox="0 0 12 12" fill="none"><path d="M1.5 6l3 3 6-6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>All CSS components</div>
+        <div class="price-feat"><svg viewBox="0 0 12 12" fill="none"><path d="M1.5 6l3 3 6-6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>Design tokens</div>
+        <div class="price-feat"><svg viewBox="0 0 12 12" fill="none"><path d="M1.5 6l3 3 6-6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>React components</div>
+        <div class="price-feat no"><svg viewBox="0 0 12 12" fill="none"><path d="M3 3l6 6M9 3L3 9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>Figma library</div>
+        <div class="price-feat no"><svg viewBox="0 0 12 12" fill="none"><path d="M3 3l6 6M9 3L3 9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>Priority support</div>
+        <div class="price-cta"><button class="btn-price btn-price-ghost">Download free</button></div>
+      </div>
+      <div class="price-card hot">
+        <div class="price-plan">Pro</div>
+        <div class="price-amt">$29</div>
+        <div class="price-per">one-time payment</div>
+        <div class="price-divider"></div>
+        <div class="price-feat"><svg viewBox="0 0 12 12" fill="none"><path d="M1.5 6l3 3 6-6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>Everything in Free</div>
+        <div class="price-feat"><svg viewBox="0 0 12 12" fill="none"><path d="M1.5 6l3 3 6-6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>Figma component library</div>
+        <div class="price-feat"><svg viewBox="0 0 12 12" fill="none"><path d="M1.5 6l3 3 6-6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>Lifetime updates</div>
+        <div class="price-feat"><svg viewBox="0 0 12 12" fill="none"><path d="M1.5 6l3 3 6-6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>Priority support</div>
+        <div class="price-feat"><svg viewBox="0 0 12 12" fill="none"><path d="M1.5 6l3 3 6-6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>5 project license</div>
+        <div class="price-cta"><button class="btn-price btn-price-solid">Get Pro →</button></div>
+      </div>
+      <div class="price-card">
+        <div class="price-plan">Team</div>
+        <div class="price-amt">$79</div>
+        <div class="price-per">one-time payment</div>
+        <div class="price-divider"></div>
+        <div class="price-feat"><svg viewBox="0 0 12 12" fill="none"><path d="M1.5 6l3 3 6-6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>Everything in Pro</div>
+        <div class="price-feat"><svg viewBox="0 0 12 12" fill="none"><path d="M1.5 6l3 3 6-6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>Unlimited projects</div>
+        <div class="price-feat"><svg viewBox="0 0 12 12" fill="none"><path d="M1.5 6l3 3 6-6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>Up to 10 team members</div>
+        <div class="price-feat"><svg viewBox="0 0 12 12" fill="none"><path d="M1.5 6l3 3 6-6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>Custom theming guide</div>
+        <div class="price-feat"><svg viewBox="0 0 12 12" fill="none"><path d="M1.5 6l3 3 6-6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>Slack community</div>
+        <div class="price-cta"><button class="btn-price btn-price-ghost">Get Team</button></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="nav-logo" style="font-size:13px;">
+      <div class="nav-mark" style="width:20px;height:20px;border-radius:6px"><svg viewBox="0 0 12 12" fill="none"><rect x="1" y="1" width="4" height="4" rx="1" fill="white"/><rect x="7" y="1" width="4" height="4" rx="1" fill="white" opacity=".6"/><rect x="1" y="7" width="4" height="4" rx="1" fill="white" opacity=".6"/><rect x="7" y="7" width="4" height="4" rx="1" fill="white" opacity=".3"/></svg></div>
+      Pulse UI
+    </div>
+    <div class="footer-copy">© 2026 Pulse UI. MIT License.</div>
+    <div class="footer-links">
+      <span class="footer-link">GitHub</span>
+      <span class="footer-link">Docs</span>
+      <span class="footer-link">Twitter</span>
+      <span class="footer-link">Gumroad</span>
+    </div>
+  </footer>
+
+</div>
